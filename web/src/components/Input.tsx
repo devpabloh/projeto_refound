@@ -11,7 +11,7 @@ export function Input({legend, ...rest}:Props){
                 {legend}
             </legend>}
 
-            <input type="text" {...rest} className="w-full h-12 rounded-lg border border-gray-300 px-4 text-sm text-gray-100 bg-transparent outline-none focus:border-2 focus:border-green-100 placeholder-gray-100" />
+            <input type="text" {...rest} className="w-full h-12 rounded-lg border border-gray-300 px-4 text-sm text-gray-100 bg-transparent outline-none focus:border-2 focus:border-green-100 placeholder-gray-300" />
         </fieldset>
     )
 }
