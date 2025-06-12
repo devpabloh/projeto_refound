@@ -5,7 +5,7 @@ import { AuthLayout } from "../components/AuthLayout";
 
 /* Pages */
 import { SignIn } from "../pages/SignIn";
-import { SignUp } from "../pages/signUp";
+import { SignUp } from "../pages/SignUp";
 import { NotFound } from "../pages/NotFound";
 
 export function AuthRoutes() {
