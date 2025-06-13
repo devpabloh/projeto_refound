@@ -6,11 +6,13 @@ import searchSvg from "../assets/search.svg"
 import { RefoundItem } from "../components/RefoundItem"
 import { CATEGORIES } from "../utils/categories"
 
+import { formatCurrency } from "../utils/formatCurrency"
+
 const REFOUND_EXAMPLE = {
     id: "1",
     name: "João da Silva",
     category: "Alimentação",
-    value: "50,00",
+    value: formatCurrency(34.5),
     categoryImg: CATEGORIES["transport"].icon
 }
 
