@@ -1,7 +1,7 @@
 import uploadSvg from "../assets/upload.svg"
 
 type Props = React.ComponentProps<"input"> & {
-    fileName?: string
+    fileName?: string | null
 }
 
 export function Upload({fileName = null, ...rest}:Props){

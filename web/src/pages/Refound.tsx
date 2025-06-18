@@ -4,23 +4,29 @@ import fileSvg from "../assets/file.svg"
 
 import { useState } from "react"
 import { useNavigate, useParams } from "react-router"
+import {z, ZodError} from "zod"
 
 import { Input } from "../components/Input"
 import { Select } from "../components/Select"
 import { Upload } from "../components/Upload"
 import { Button } from "../components/Button"
 
+const refundSchema = z.object({
+    name: z.string().min(3, {message: "Informe um nome claro para sua solicitação"}),
+    category: z.string().min(1, {message: "Informe a categoria"}),
+    amount: z.coerce.number({message: "Informe um valor válido"}).positive({message: "Informe um valor válido e superior a 0"})
+})
+
 
 export function Refound(){
-    const [category, setCategory] = useState("Teste")
-    const[name, setName] = useState("34")
-    const [ amount, setAmount] = useState("Transport")
+    const [category, setCategory] = useState("")
+    const[name, setName] = useState("")
+    const [ amount, setAmount] = useState("")
     const [isLoading, setIsLoading] = useState(false)
     const [fileName, setFileName] = useState<File | null>(null)
 
     const navigate = useNavigate()
     const params = useParams<{id: string}>()
-    console.log(`Params id: ${params.id}`)
 
     function onSubmit(e: React.FormEvent){
         e.preventDefault()
@@ -29,8 +35,28 @@ export function Refound(){
             return navigate(-1)
         }
 
-        console.log(name, category, amount, fileName)
-        navigate("/confirm", {state: {fromSubmit: true}})
+        try {
+            setIsLoading(true)
+
+            const data = refundSchema.parse({
+                name,
+                category,
+                amount: amount.replace(",", ".")
+            })
+
+            console.log(data)
+            navigate("/confirm", {state: {fromSubmit: true}})
+        } catch (error) {
+            console.log(error)
+            if(error instanceof ZodError){
+                return alert(error.issues[0].message)
+            }
+            alert("Não foi possivel realizar a solicitação")
+        }finally{
+            setIsLoading(false)
+        }
+
+        
     }
 
     return(
@@ -57,7 +83,7 @@ export function Refound(){
                 params.id ? (
                     <a href="https://devpabloh.github.io/portfolio-dev-pabloh/#contact" target="_blank" rel="noopener" className="text-sm text-green-100 font-semibold flex items-center justify-center gap-2 my-6 hover:opacity-50 transition ease-linear">
                         <img src={fileSvg} alt="Imagem do arquivo" />
-                        Abrir Comprovante
+                        <span>Abrir Comprovante</span>
                     </a>
                 ) : (
                     <Upload fileName={fileName && fileName.name} onChange={(e)=> e.target.files && setFileName(e.target.files[0])} disabled={!!params.id}/>
