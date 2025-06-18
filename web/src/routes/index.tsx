@@ -9,10 +9,8 @@ import { ManagerRoutes } from "./ManegerRoutes";
 
 import { Loading } from "../components/Loading";
 
-const isLoading = false; // simulando o carregamento
-
 export function Routes() {
-    const {session} = useAuth()
+    const {session, isLoading} = useAuth()
     
 
     function Route(){
