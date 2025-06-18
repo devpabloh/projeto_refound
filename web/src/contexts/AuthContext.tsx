@@ -6,12 +6,16 @@ type AuthContext = {
     save: (data: UserApiResponse) => void
 }
 
+const LOCAL_STORAGE_KEY = "@REFOUND"
+
 export const AuthContext = createContext({} as AuthContext)
 
 export function AuthProvider({children}:{children: ReactNode}){
     const [session, setSession] = useState<null | UserApiResponse>(null)
 
     function save(data: UserApiResponse ){
+        localStorage.setItem(`${LOCAL_STORAGE_KEY}:user`, JSON.stringify(data.user))
+        localStorage.setItem(`${LOCAL_STORAGE_KEY}:token`, JSON.stringify(data.token))
         setSession(data)
     }
 
