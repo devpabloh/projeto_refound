@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react"
+import { useEffect, useMemo, useState, type ReactNode } from "react"
 import {createContext} from "react"
 
 import { api } from "../services/api"
@@ -14,13 +14,13 @@ const LOCAL_STORAGE_KEY = "@REFOUND"
 
 export const AuthContext = createContext({} as AuthContext)
 
-export function AuthProvider({children}:{children: ReactNode}){
+export function AuthProvider({children}:{readonly children: ReactNode}){
     const [session, setSession] = useState<null | UserApiResponse>(null)
     const [isLoading, setIsLoading] = useState(true)
 
     function save(data: UserApiResponse ){
         localStorage.setItem(`${LOCAL_STORAGE_KEY}:user`, JSON.stringify(data.user))
-        localStorage.setItem(`${LOCAL_STORAGE_KEY}:token`, JSON.stringify(data.token))
+        localStorage.setItem(`${LOCAL_STORAGE_KEY}:token`, data.token)
 
         api.defaults.headers.common["Authorization"] = `Bearer ${data.token}` // adicionando um cabeçalho de autorização no login do usuário
 
@@ -52,8 +52,15 @@ export function AuthProvider({children}:{children: ReactNode}){
         loadUser()
     },[])
 
+    const value = useMemo(()=>({
+        session,
+        save,
+        isLoading,
+        remove
+    }), [session, isLoading])
+
     return (
-        <AuthContext.Provider value={{session, save, isLoading, remove}}>
+        <AuthContext.Provider value={value}>
             {children}
         </AuthContext.Provider>
     )
