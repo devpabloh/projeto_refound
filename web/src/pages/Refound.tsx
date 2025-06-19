@@ -5,11 +5,14 @@ import fileSvg from "../assets/file.svg"
 import { useState } from "react"
 import { useNavigate, useParams } from "react-router"
 import {z, ZodError} from "zod"
+import { AxiosError } from "axios"
 
 import { Input } from "../components/Input"
 import { Select } from "../components/Select"
 import { Upload } from "../components/Upload"
 import { Button } from "../components/Button"
+
+import { api } from "../services/api"
 
 const refundSchema = z.object({
     name: z.string().min(3, {message: "Informe um nome claro para sua solicitação"}),
@@ -23,12 +26,12 @@ export function Refound(){
     const[name, setName] = useState("")
     const [ amount, setAmount] = useState("")
     const [isLoading, setIsLoading] = useState(false)
-    const [fileName, setFileName] = useState<File | null>(null)
+    const [file, setFile] = useState<File | null>(null)
 
     const navigate = useNavigate()
     const params = useParams<{id: string}>()
 
-    function onSubmit(e: React.FormEvent){
+    async function onSubmit(e: React.FormEvent){
         e.preventDefault()
 
         if(params.id){
@@ -38,19 +41,36 @@ export function Refound(){
         try {
             setIsLoading(true)
 
+            if(!file){
+                return alert("Selecione um arquivo de comprovante")
+            }
+
+            const fileUploadForm = new FormData()
+
+            fileUploadForm.append("file", file)
+
+            const response = await api.post("/uploads", fileUploadForm)
+
             const data = refundSchema.parse({
                 name,
                 category,
                 amount: amount.replace(",", ".")
             })
 
-            console.log(data)
+            await api.post("/refunds", {...data, filename: response.data.filename})
+
             navigate("/confirm", {state: {fromSubmit: true}})
         } catch (error) {
-            console.log(error)
+            console.log(error)  
+
             if(error instanceof ZodError){
                 return alert(error.issues[0].message)
             }
+
+            if(error instanceof AxiosError){
+                return alert(error.response?.data.message)
+            }
+
             alert("Não foi possivel realizar a solicitação")
         }finally{
             setIsLoading(false)
@@ -70,7 +90,7 @@ export function Refound(){
                 <Select required legend="Categoria" value={category} onChange={(e)=> setCategory(e.target.value)} disabled={!!params.id}>
                     {
                         CATEGORIES_LIST.map((category=>(
-                            <option key={category}>
+                            <option key={category} value={category}>
                                 {CATEGORIES[category].name}
                             </option>
                         )))
@@ -86,7 +106,7 @@ export function Refound(){
                         <span>Abrir Comprovante</span>
                     </a>
                 ) : (
-                    <Upload fileName={fileName && fileName.name} onChange={(e)=> e.target.files && setFileName(e.target.files[0])} disabled={!!params.id}/>
+                    <Upload filename={file && file.name} onChange={(e)=> e.target.files && setFile(e.target.files[0])} disabled={!!params.id}/>
                 )
             }
 
