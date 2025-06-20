@@ -12,27 +12,27 @@ import { Pagination } from "../components/Pagination"
 import { api } from "../services/api"
 import { AxiosError } from "axios"
 
-const REFOUND_EXAMPLE = {
-    id: "1",
-    name: "João da Silva",
-    category: "Alimentação",
-    value: formatCurrency(34.5),
-    categoryImg: CATEGORIES["transport"].icon
-}
-
 const PER_PAGE = 5
 
 export function Dashboard(){
     const [ name, setName] = useState("")
     const [ page, setPage] = useState(1)
     const [ totalOfPage, setTotalOfPage] = useState(0)
-    const [refunds, setRefunds] = useState<RefoundItemProps[]>([REFOUND_EXAMPLE])
+    const [refunds, setRefunds] = useState<RefoundItemProps[]>([])
 
     async function fetchRefound(){
         try {
-            const response = await api.get(`/refunds?name=${name.trim()}&page=${page}&perPage=${PER_PAGE}`)
+            const response = await api.get<RefundsPaginationApiResponse>(`/refunds?name=${name.trim()}&page=${page}&perPage=${PER_PAGE}`)
 
-            console.log(response.data)
+            setRefunds(
+                response.data.refunds.map((refound)=>({
+                    id: refound.id,
+                    name: refound.user.name,
+                    category: refound.name,
+                    value: formatCurrency(refound.amount),
+                    categoryImg: CATEGORIES[refound.category].icon
+                }))
+            )
         } catch (error) {
             console.log(error)
 

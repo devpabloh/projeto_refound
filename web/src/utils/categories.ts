@@ -9,7 +9,7 @@ export const CATEGORIES = {
         name: "Alimentação",
         icon: foodSvg
     },
-    Others: {
+    others: {
         name: "Outros",
         icon: othersSvg
     },
