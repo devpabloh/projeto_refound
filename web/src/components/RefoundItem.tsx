@@ -3,8 +3,8 @@
 export type RefoundItemProps = {
     id: string
     name: string
-    category: string
-    value: string
+    description: string
+    amount: string
     categoryImg: string
 }
 
@@ -21,11 +21,11 @@ export function RefoundItem({data, ...rest}:Props){
             
             <div className="flex flex-col flex-1">
                 <strong className="text-sm text-gray-100" >{data.name}</strong>
-                <span className=" text-xs text-gray-200">{data.category}</span>
+                <span className=" text-xs text-gray-200">{data.description}</span>
             </div>
             <span className="text-sm text-gray-100 font-semibold">
                 <small className="font-small text-gray-200">R$</small>
-                {data.value}
+                {data.amount}
             </span>
         </a>
     )

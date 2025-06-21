@@ -28,11 +28,13 @@ export function Dashboard(){
                 response.data.refunds.map((refound)=>({
                     id: refound.id,
                     name: refound.user.name,
-                    category: refound.name,
-                    value: formatCurrency(refound.amount),
+                    description: refound.name,
+                    amount: formatCurrency(refound.amount),
                     categoryImg: CATEGORIES[refound.category].icon
                 }))
             )
+
+            setTotalOfPage(response.data.pagination.totalPages)
         } catch (error) {
             console.log(error)
 
@@ -42,6 +44,12 @@ export function Dashboard(){
 
             alert("Não foi possível carregar")
         }
+    }
+
+    function onSubmit(e: React.FormEvent){
+        e.preventDefault()
+
+        fetchRefound()
     }
 
     function handlePagination(action: "next" | "prev"){
@@ -65,7 +73,7 @@ export function Dashboard(){
     return(
         <div className="bg-gray-500 rounded-xl p-10 md:min-w-[768px]">
             <h1 className="text-gray-100 font-bold text-xl flex-1">Solicitações</h1>
-            <form className="flex flex-1 items-center justify-between pb-6 border-b-[1px] border-b-gray-400 mf:flex-row gap-2 mt-6" onSubmit={fetchRefound}>
+            <form className="flex flex-1 items-center justify-between pb-6 border-b-[1px] border-b-gray-400 mf:flex-row gap-2 mt-6" onSubmit={onSubmit}>
                 <Input placeholder="Pesquisar pelo nome" onChange={(e) => setName(e.target.value)}/>
                 <Button type="submit" variant="icon" >
                     <img src={searchSvg} alt="Botão de pesquisa" className="w-5"/>
