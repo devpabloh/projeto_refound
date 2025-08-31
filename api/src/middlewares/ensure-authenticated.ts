@@ -25,7 +25,7 @@ function ensureAuthenticated(
 
     const { role, sub: user_id } = verify(
       token,
-      authConfig.jwt.secret as string
+      authConfig.jwt.secret
     ) as TokenPayload
 
     request.user = {
