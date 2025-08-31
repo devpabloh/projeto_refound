@@ -16,5 +16,6 @@
     "src/server.ts": {
       "runtime": "nodejs18.x"
     }
-  }
+  },
+  "buildCommand": "npm run vercel-build"
 }

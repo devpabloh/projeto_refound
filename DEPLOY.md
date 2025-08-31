@@ -31,7 +31,7 @@ CLOUDINARY_CLOUD_NAME="seu-cloud-name"
 CLOUDINARY_API_KEY="sua-api-key"
 CLOUDINARY_API_SECRET="seu-api-secret"
 NODE_ENV="production"
-FRONTEND_URL="https://seu-frontend.vercel.app"
+FRONTEND_URL="deployhttps://seu-frontend.vercel.app"
 ```
 
 5. Configure o projeto:
