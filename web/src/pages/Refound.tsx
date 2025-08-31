@@ -127,7 +127,7 @@ export function Refound(){
 
             {
                 (params.id && fileURL ) ? (
-                    <a href={`${process.env.VITE_API_URL || 'http://localhost:3333'}/uploads/${fileURL}`} target="_blank" rel="noopener" className="text-sm text-green-100 font-semibold flex items-center justify-center gap-2 my-6 hover:opacity-50 transition ease-linear">
+                    <a href={`${process.env.VITE_API_URL || '/api'}/uploads/${fileURL}`} target="_blank" rel="noopener" className="text-sm text-green-100 font-semibold flex items-center justify-center gap-2 my-6 hover:opacity-50 transition ease-linear">
                         <img src={fileSvg} alt="Imagem do arquivo" />
                         <span>Abrir Comprovante</span>
                     </a>
