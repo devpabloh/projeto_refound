@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "description": "Sistema de reembolsos - Frontend e Backend",
   "scripts": {
-    "build": "npm run build:api && npm run build:web",
+    "build": "bash build.sh",
     "build:api": "cd api && npm run vercel-build",
     "build:web": "cd web && npm run build",
-    "install:all": "npm install && cd api && npm install && cd ../web && npm install"
+    "install:all": "npm install && cd api && npm install && cd ../web && npm install",
+    "vercel-build": "bash build.sh"
   },
   "workspaces": [
     "api",

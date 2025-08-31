@@ -11,7 +11,7 @@ const app = express()
 // Configuração do CORS para produção
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
-    ? process.env.FRONTEND_URL || 'https://refound.vercel.app'
+    ? process.env.FRONTEND_URL || 'https://refound-web.vercel.app'
     : 'http://localhost:5173',
   credentials: true
 }))
