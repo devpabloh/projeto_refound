@@ -24,18 +24,27 @@ class UploadsController {
             .positive()
             .refine(
               (size) => size <= uploadConfig.MAX_FILE_SIZE,
-              "Arquivo excede o tamanho máximo de 5MB."
+              "Arquivo excede o tamanho máximo de 1MB."
             ),
         })
         .passthrough() // Permite propriedades adicionais que o multer adiciona ao arquivo
 
       const file = fileSchema.parse(request.file)
-      const filename = await diskStorage.saveFile(file.filename)
+      
+      let filename: string
+      
+      if (process.env.NODE_ENV === 'production') {
+        // Em produção, o Cloudinary já retorna a URL
+        filename = (request.file as any).url || (request.file as any).secure_url
+      } else {
+        // Em desenvolvimento, usa o storage local
+        filename = await diskStorage.saveFile(file.filename)
+      }
 
       response.status(201).json({ filename })
     } catch (error) {
       if (error instanceof ZodError) {
-        if (request.file) {
+        if (request.file && process.env.NODE_ENV !== 'production') {
           await diskStorage.deleteFile(request.file.filename, "tmp")
         }
 
